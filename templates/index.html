@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FYP2 VIVA Evidence Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --bg-subtle: #eef3f7;
+      --surface: #ffffff;
+      --surface-2: #f9fbfd;
+      --ink: #17202a;
+      --ink-secondary: #4f5d6b;
+      --ink-muted: #6f7d8c;
+      --line: #d8e0e8;
+      --line-strong: #b7c3cf;
+      --blue: #256f9c;
+      --blue-dark: #174d6e;
+      --blue-soft: #e4f1f8;
+      --amber: #9b6400;
+      --amber-soft: #fff4dc;
+      --green: #237152;
+      --green-soft: #e2f3ec;
+      --red: #aa271d;
+      --red-soft: #fff0ee;
+      --shadow-sm: 0 1px 2px rgba(23,32,42,0.06);
+      --shadow-md: 0 8px 20px rgba(23,32,42,0.08);
+      --radius: 8px;
+      --mono: 'IBM Plex Mono', 'Consolas', monospace;
+      --sans: 'IBM Plex Sans', -apple-system, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    :focus-visible {
+      outline: 2px solid rgba(37,111,156,0.45);
+      outline-offset: 2px;
+    }
+
+    /* ── Layout ───────────────────────────────────────────── */
+    .app-shell {
+      display: grid;
+      grid-template-columns: 368px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ──────────────────────────────────────────── */
+    aside {
+      background: #fbfcfe;
+      border-right: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-accent {
+      height: 1px;
+      background: var(--line);
+    }
+    .sidebar-inner {
+      padding: 18px 18px 28px;
+      flex: 1;
+    }
+    .sidebar-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+    .sidebar-card h1 {
+      margin: 0 0 4px;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+    .sidebar-note {
+      margin: 0;
+      color: var(--ink-secondary);
+      font-size: 12.5px;
+      line-height: 1.45;
+    }
+    .kicker {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+
+    .nav-summary {
+      display: grid;
+      gap: 0;
+      margin-bottom: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .nav-summary span {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+      background: transparent;
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-summary span:last-child { border-bottom: 0; }
+    .nav-summary strong {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.03em;
+      text-align: right;
+      max-width: 188px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* ── Form controls ────────────────────────────────────── */
+    .field { margin-bottom: 14px; }
+    .field-note {
+      color: var(--ink-secondary);
+      font-size: 11.5px;
+      line-height: 1.4;
+      margin-top: 5px;
+      overflow-wrap: anywhere;
+    }
+    label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 5px;
+      letter-spacing: 0.02em;
+    }
+    select, input[type="number"], input[type="file"] {
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--ink);
+      padding: 0 10px;
+      font-family: var(--mono);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.16s ease-out, box-shadow 0.16s ease-out, background 0.16s ease-out;
+    }
+    select:focus, input[type="number"]:focus, input[type="file"]:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37,111,156,0.14);
+    }
+    input[type="file"] { padding: 8px 10px; font-family: var(--sans); }
+    .radio-line, .check-line {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.35;
+      margin: 6px 0;
+      padding: 10px 12px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      transition: border-color 0.16s ease-out, background 0.16s ease-out;
+    }
+    .radio-line:hover, .check-line:hover {
+      border-color: var(--blue);
+      background: var(--surface-2);
+    }
+    .radio-line input, .check-line input {
+      margin-top: 2px;
+      accent-color: var(--blue);
+    }
+    .check-line small { color: var(--ink-secondary); }
+    .inline-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .advanced-settings {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      margin: 2px 0 14px;
+      overflow: hidden;
+    }
+    .advanced-settings summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      color: var(--ink);
+      font-size: 12.5px;
+      font-weight: 600;
+      list-style: none;
+    }
+    .advanced-settings summary::-webkit-details-marker { display: none; }
+    .advanced-settings summary::after {
+      content: '+';
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--blue-dark);
+      font-family: var(--mono);
+      font-size: 13px;
+      flex: 0 0 auto;
+    }
+    .advanced-settings[open] summary::after { content: '-'; }
+    .advanced-settings summary small {
+      display: block;
+      color: var(--ink-secondary);
+      font-weight: 400;
+      font-size: 11px;
+      margin-top: 1px;
+    }
+    .advanced-body {
+      padding: 12px;
+      border-top: 1px solid var(--line);
+      background: var(--surface-2);
+    }
+    .advanced-body .field:last-child { margin-bottom: 0; }
+
+    .btn {
+      width: 100%;
+      border: 0;
+      border-radius: var(--radius);
+      background: var(--blue);
+      color: white;
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 13.5px;
+      padding: 11px 14px;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: background 0.16s ease-out, transform 0.16s ease-out;
+    }
+    .btn:hover {
+      background: var(--blue-dark);
+      transform: translateY(-1px);
+    }
+    .btn:active { transform: translateY(0); }
+    .btn:disabled {
+      opacity: 0.72;
+      cursor: wait;
+      transform: none;
+    }
+    .btn.secondary {
+      background: var(--surface);
+      color: var(--blue);
+      border: 1px solid var(--blue);
+    }
+    .btn.secondary:hover { background: var(--blue-soft); }
+    .auto-hint {
+      color: var(--ink-secondary);
+      font-size: 11px;
+      line-height: 1.35;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    /* ── Main area ────────────────────────────────────────── */
+    main {
+      min-width: 0;
+      padding: 0 24px 32px;
+    }
+
+    /* ── Topbar ───────────────────────────────────────────── */
+    .topbar {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+      margin: 0 -24px 20px;
+      padding: 0 24px;
+      background: rgba(245,247,250,0.9);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    .topbar-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .topbar-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 3px var(--green-soft);
+    }
+    .topbar-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink-secondary);
+      font-size: 12px;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 26px;
+      border: 1px solid #aac8d7;
+      background: var(--blue-soft);
+      color: var(--blue-dark);
+      padding: 0 10px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* ── Hero ─────────────────────────────────────────────── */
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      position: relative;
+      box-shadow: var(--shadow-sm);
+    }
+    .hero-content { position: relative; }
+    .hero h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+    .hero p {
+      margin: 0;
+      color: var(--ink-secondary);
+      font-size: 13px;
+      line-height: 1.45;
+      max-width: 640px;
+    }
+    .hero-empty {
+      color: var(--ink-secondary);
+      font-size: 13px;
+      text-align: center;
+      padding: 16px;
+    }
+
+    /* ── Workflow pipeline ────────────────────────────────── */
+    .workflow {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      margin-bottom: 20px;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+    .workflow-step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0 8px;
+      position: relative;
+    }
+    .workflow-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: calc(50% + 18px);
+      right: calc(-50% + 18px);
+      height: 1px;
+      background: var(--line);
+    }
+    .step-circle {
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--blue-dark);
+      background: var(--blue-soft);
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    .step-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    .step-desc {
+      font-size: 11px;
+      color: var(--ink-secondary);
+      line-height: 1.35;
+      max-width: 180px;
+    }
+
+    /* ── Metrics grid ─────────────────────────────────────── */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .metric {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 13px 15px;
+      box-shadow: var(--shadow-sm);
+    }
+    .metric-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--ink-secondary);
+      margin-bottom: 6px;
+    }
+    .metric-value {
+      font-family: var(--mono);
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .metric-note {
+      color: var(--ink-secondary);
+      font-size: 11.5px;
+      margin-top: 4px;
+      line-height: 1.35;
+    }
+    .ok { color: var(--green); }
+    .warn { color: var(--amber); }
+
+    /* ── Tabs ─────────────────────────────────────────────── */
+    .tabs { margin-top: 4px; }
+    .tab-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 14px;
+      padding: 3px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+    .tab-buttons button {
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--ink-secondary);
+      padding: 8px 14px;
+      font-family: var(--sans);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.16s ease-out, background 0.16s ease-out;
+    }
+    .tab-buttons button:hover {
+      color: var(--ink);
+      background: rgba(58,124,165,0.06);
+    }
+    .tab-buttons button.active {
+      background: var(--blue);
+      color: white;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Image grid ───────────────────────────────────────── */
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .image-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .image-card h3 {
+      font-size: 12px;
+      font-weight: 600;
+      margin: 0;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink-secondary);
+      letter-spacing: 0.02em;
+      background: var(--surface-2);
+    }
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #e8edf2;
+    }
+    /* ── Tables ───────────────────────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      min-width: 700px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    tbody tr:last-child td { border-bottom: 0; }
+    th {
+      background: var(--surface-2);
+      font-family: var(--mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-secondary);
+      white-space: nowrap;
+    }
+    tbody tr:hover { background: rgba(37,111,156,0.04); }
+
+    /* ── Downloads ────────────────────────────────────────── */
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .download {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid var(--blue);
+      border-radius: var(--radius);
+      background: var(--blue-soft);
+      color: var(--blue-dark);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 12.5px;
+      padding: 12px;
+      text-align: center;
+      transition: background 0.16s ease-out, color 0.16s ease-out, border-color 0.16s ease-out;
+    }
+    .download:hover {
+      background: var(--blue);
+      color: white;
+    }
+    .download.disabled {
+      background: var(--surface-2);
+      color: var(--ink-muted);
+      border-color: var(--line);
+      pointer-events: none;
+    }
+
+    /* ── Alerts ───────────────────────────────────────────── */
+    .alert {
+      border: 1px solid #f0c6c0;
+      background: var(--red-soft);
+      color: var(--red);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+
+    .empty {
+      color: var(--ink-secondary);
+      background: var(--surface);
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    /* ── Evaluation section ───────────────────────────────── */
+    .eval-header {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-secondary);
+      margin-bottom: 14px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Responsive ───────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .image-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 900px) {
+      .app-shell { grid-template-columns: 1fr; }
+      aside { position: static; height: auto; }
+      main { padding: 0 16px 24px; }
+      .topbar { margin: 0 -16px 16px; padding: 0 16px; }
+      .download-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .inline-grid, .metrics { grid-template-columns: 1fr; }
+      .workflow {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .workflow-step {
+        align-items: flex-start;
+        text-align: left;
+        padding: 0;
+      }
+      .workflow-step::after { display: none; }
+      .topbar-meta { display: none; }
+    }
+
+    /* ── Reduced motion ───────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside>
+      <div class="sidebar-accent"></div>
+      <div class="sidebar-inner">
+        <div class="sidebar-card">
+          <div class="kicker">FYP2 VIVA</div>
+          <h1>Construction Material Inspection Console</h1>
+          <p class="sidebar-note">YOLO instance segmentation, per-class counting, and mask-derived geometry for viva-ready evidence.</p>
+        </div>
+
+        <div class="nav-summary">
+          <span>Model<strong>{{ current_model }}</strong></span>
+          <span>Default config<strong>1024 / 0.25 / 0.45</strong></span>
+          <span>Output<strong>PNG + CSV</strong></span>
+        </div>
+
+        <form id="analysis-form" method="post" enctype="multipart/form-data" data-has-image="{% if cached_image_label %}1{% else %}0{% endif %}">
+          <div class="field">
+            <label>Upload image(s)</label>
+            <input id="image-file" type="file" name="image_file" accept=".jpg,.jpeg,.png" multiple>
+            {% if cached_image_label %}
+              <div class="field-note">Current: {{ cached_image_label }}. Adjust settings below to re-analyze without re-uploading.</div>
+            {% else %}
+              <div class="field-note">Select one JPG or PNG image. Analysis starts on file selection.</div>
+            {% endif %}
+          </div>
+
+          <div class="field">
+            <label>Model</label>
+            <select class="auto-submit" name="model">
+              {% for name in available_models %}
+                <option value="{{ name }}" {% if current_model == name %}selected{% endif %}>{{ name }}</option>
+              {% endfor %}
+            </select>
+            <div class="field-note">Only validated demo candidates are shown.</div>
+          </div>
+
+          <div class="inline-grid">
+            <div class="field">
+              <label>Confidence</label>
+              <input class="auto-submit" type="number" name="conf" min="0" max="1" step="0.05" value="{{ '%.2f'|format(form.conf) }}">
+            </div>
+            <div class="field">
+              <label>NMS IoU</label>
+              <input class="auto-submit" type="number" name="iou" min="0" max="1" step="0.05" value="{{ '%.2f'|format(form.iou) }}">
+            </div>
+          </div>
+          <div class="field-note" style="margin-bottom:14px">0.25 matches the formal baseline; 0.35&ndash;0.50 can reduce duplicate detections.</div>
+
+          <div class="field">
+            <label>Resolution</label>
+            <select class="auto-submit" name="imgsz">
+              <option value="1024" {% if form.imgsz == 1024 %}selected{% endif %}>1024 &mdash; recommended</option>
+              <option value="640" {% if form.imgsz == 640 %}selected{% endif %}>640 &mdash; faster fallback</option>
+            </select>
+          </div>
+
+          <details class="advanced-settings" {% if form.preprocess or form.tiled %}open{% endif %}>
+            <summary>
+              <span>Advanced options<small>Keep closed for the formal demo path.</small></span>
+            </summary>
+            <div class="advanced-body">
+              <div class="field">
+                <label class="check-line">
+                  <input class="auto-submit" type="checkbox" name="preprocess" value="1" {% if form.preprocess %}checked{% endif %}>
+                  <span><strong>Shadow enhancement</strong><br><small>CLAHE + gamma for dark areas. Off for well-lit images.</small></span>
+                </label>
+              </div>
+
+              <div class="field">
+                <label class="check-line">
+                  <input class="auto-submit" type="checkbox" name="tiled" value="1" {% if form.tiled %}checked{% endif %}>
+                  <span><strong>Nail-focused tiled refinement</strong><br><small>Preserves full-frame Brick/I-beam detections and uses overlapping tiles to add small nails. Slower.</small></span>
+                </label>
+              </div>
+
+            </div>
+          </details>
+
+          <button id="submit-btn" class="btn" type="submit">Run evidence analysis</button>
+          <div class="auto-hint">After upload, setting changes re-run the current image automatically.</div>
+        </form>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div class="topbar-title"><span class="topbar-dot"></span> Inspection Console</div>
+        <div class="topbar-meta">
+          <span class="status-pill">{{ current_model }}</span>
+          <span>127.0.0.1:5000</span>
+        </div>
+      </header>
+
+      {% if result %}
+        <section class="hero">
+          <div class="hero-content">
+            <h2>Detection, Segmentation &amp; Material Evidence</h2>
+            <p>Inspect Brick masks, Nail/I-beam skeleton evidence, post-processed counts, confidence ranges, and exportable artifacts from one VIVA-ready console.</p>
+          </div>
+        </section>
+
+        <section class="workflow" aria-label="Analysis pipeline">
+          <div class="workflow-step">
+            <div class="step-circle">I</div>
+            <div class="step-title">Input</div>
+            <div class="step-desc">Upload a site image. Latest image stays cached.</div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-circle">A</div>
+            <div class="step-title">Analysis</div>
+            <div class="step-desc">YOLO segmentation with selected thresholds and overlay.</div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-circle">E</div>
+            <div class="step-title">Evidence</div>
+            <div class="step-desc">Review masks, geometry, confidence, and exports.</div>
+          </div>
+        </section>
+
+        {% if error %}
+          <div class="alert">
+            {{ error }}{% if using_last_successful_result %} Previous successful result is kept below for review.{% endif %}
+          </div>
+        {% endif %}
+
+        <section class="metrics">
+          <div class="metric">
+            <div class="metric-label">Brick</div>
+            <div class="metric-value">{{ result.brick_count }}</div>
+            <div class="metric-note">Post-processed instances{% if result.box_count and result.box_per_class.Brick != result.brick_count %} ({{ result.box_per_class.Brick }} raw){% endif %}</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">I-beam</div>
+            <div class="metric-value">{{ result.ibeam_count }}</div>
+            <div class="metric-note">{{ result.ibeam_geometry_count }} I-beam geometry rows{% if result.box_count and result.box_per_class['I-beam'] != result.ibeam_count %} ({{ result.box_per_class['I-beam'] }} raw){% endif %}</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Nail</div>
+            <div class="metric-value">{{ result.nail_count }}</div>
+            <div class="metric-note">Post-processed instances{% if result.box_count and result.box_per_class.nail != result.nail_count %} ({{ result.box_per_class.nail }} raw){% endif %}</div>
+          </div>
+            <div class="metric">
+              <div class="metric-label">Total</div>
+              <div class="metric-value">{{ result.count }}</div>
+              <div class="metric-note">{{ '%.3f'|format(result.elapsed) }}s{% if result.latency_samples and result.latency_samples >= 5 %} &middot; mean {{ '%.3f'|format(result.latency_mean) }}s &middot; p95 {{ '%.3f'|format(result.latency_p95) }}s{% endif %}</div>
+            </div>
+        </section>
+
+        <section class="tabs">
+          <div class="tab-buttons">
+            <button type="button" class="active" data-tab="visual">Visual review</button>
+            <button type="button" data-tab="geometry">Geometry table</button>
+            <button type="button" data-tab="confidence">Confidence</button>
+            {% if eval_metrics %}
+            <button type="button" data-tab="evaluation">Evaluation</button>
+            {% endif %}
+            <button type="button" data-tab="exports">Exports</button>
+          </div>
+
+          <div id="tab-visual" class="tab-panel active">
+            <div class="image-grid">
+              <div class="image-card">
+                <h3>Original</h3>
+                <img src="{{ result.original_uri }}" alt="Original image">
+              </div>
+              <div class="image-card">
+                <h3>Segmentation mask</h3>
+                <img src="{{ result.seg_uri }}" alt="Segmentation result">
+              </div>
+              <div class="image-card">
+                <h3>Geometry evidence</h3>
+                <img src="{{ result.skeleton_uri }}" alt="Geometry evidence">
+              </div>
+            </div>
+          </div>
+
+          <div id="tab-geometry" class="tab-panel">
+            {% if result.analysis_rows %}
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      {% for key in result.analysis_rows[0].keys() %}
+                        <th>{{ key }}</th>
+                      {% endfor %}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for row in result.analysis_rows %}
+                      <tr>
+                        {% for value in row.values() %}
+                          <td>{{ value }}</td>
+                        {% endfor %}
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% else %}
+              <div class="empty">No geometry rows detected. Try an image with visible I-beam material.</div>
+            {% endif %}
+          </div>
+
+          <div id="tab-confidence" class="tab-panel">
+            {% if result.conf_stats %}
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>Class</th><th>Mean</th><th>Min</th><th>Max</th></tr>
+                  </thead>
+                  <tbody>
+                    {% for cls, stats in result.conf_stats.items() %}
+                      <tr>
+                        <td>{{ cls }}</td>
+                        <td>{{ stats.mean }}</td>
+                        <td>{{ stats.min }}</td>
+                        <td>{{ stats.max }}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% else %}
+              <div class="empty">No confidence statistics available. No objects were detected.</div>
+            {% endif %}
+          </div>
+
+          <div id="tab-exports" class="tab-panel">
+            <div class="download-grid">
+              <a class="download" href="{{ result.seg_uri }}" download="segmentation_result.png">Segmentation PNG</a>
+              <a class="download" href="{{ result.skeleton_uri }}" download="geometry_evidence.png">Geometry PNG</a>
+              <a class="download {% if not result.csv_uri %}disabled{% endif %}" href="{{ result.csv_uri or '#' }}" download="geometry_analysis.csv">Geometry CSV</a>
+            </div>
+          </div>
+
+          {% if eval_metrics %}
+          <div id="tab-evaluation" class="tab-panel">
+            <h2 style="margin:0 0 6px;font-size:16px">Formal Evaluation Results</h2>
+            <p class="eval-header">
+              Model: {{ eval_metrics.weights.split('\\')[-1].split('/')[-1] if eval_metrics.weights else 'best.pt' }}
+              &middot; Split: {{ eval_metrics.split }}
+              &middot; Images: {{ eval_metrics.num_images }}
+              &middot; imgsz: {{ eval_metrics.imgsz }}
+              &middot; conf: {{ eval_metrics.conf }}
+            </p>
+
+            <div class="metrics" style="margin-bottom:14px">
+              <div class="metric">
+                <div class="metric-label">Mask mAP50</div>
+                <div class="metric-value ok">{{ '%.1f'|format(eval_metrics.map.mask.map50 * 100) }}%</div>
+                <div class="metric-note">Segmentation at IoU 0.50</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Box mAP50</div>
+                <div class="metric-value ok">{{ '%.1f'|format(eval_metrics.map.box.map50 * 100) }}%</div>
+                <div class="metric-note">Detection at IoU 0.50</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Precision</div>
+                <div class="metric-value ok">{{ '%.1f'|format(eval_metrics.map.mask.mp * 100) }}%</div>
+                <div class="metric-note">Mask precision</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Inference</div>
+                <div class="metric-value ok">{{ '%.0f'|format(eval_metrics.counts.latency.inference.median_ms) }}ms</div>
+                <div class="metric-note">median on test split</div>
+              </div>
+            </div>
+
+            <p style="color:var(--ink-secondary);font-size:11.5px;margin:0">
+              Real-time: median {{ '%.0f'|format(eval_metrics.counts.latency.inference.median_ms) }}ms
+              {% if eval_metrics.counts.latency.inference.p95_ms < 1000 %} (p95 {{ '%.0f'|format(eval_metrics.counts.latency.inference.p95_ms) }}ms &lt; 1s){% endif %}
+              &middot; {{ eval_metrics.num_images }} test images
+            </p>
+          </div>
+          {% endif %}
+        </section>
+
+        {% if batch_results and batch_results|length > 1 %}
+        <section style="margin-top:20px">
+          <h2 style="margin:0 0 10px;font-size:15px">Batch comparison ({{ batch_results|length }} images)</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Total</th>
+                  <th>Brick</th>
+                  <th>I-beam</th>
+                  <th>Nail</th>
+                  <th>Geometry</th>
+                  <th>Latency</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for br in batch_results %}
+                <tr>
+                  <td><strong>{{ br.image_label }}</strong></td>
+                  <td>{{ br.count }}</td>
+                  <td>{{ br.brick_count }}</td>
+                  <td>{{ br.ibeam_count }}</td>
+                  <td>{{ br.nail_count }}</td>
+                  <td>{{ br.geometry_count }} rows</td>
+                  <td>{{ '%.3f'|format(br.elapsed) }}s</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="download-grid" style="margin-top:10px">
+            {% for br in batch_results %}
+            <a class="download" href="{{ br.seg_uri }}" download="{{ br.image_label }}_seg.png">{{ br.image_label }} seg</a>
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+
+      {% else %}
+        <section class="hero">
+          <div class="hero-content">
+            <h2>Detection, Segmentation &amp; Material Evidence</h2>
+            <p>Inspect Brick masks, Nail/I-beam skeleton evidence, post-processed counts, confidence ranges, and exportable artifacts from one VIVA-ready console.</p>
+          </div>
+        </section>
+
+        <section class="workflow" aria-label="Analysis pipeline">
+          <div class="workflow-step">
+            <div class="step-circle">I</div>
+            <div class="step-title">Input</div>
+            <div class="step-desc">Upload a site image. Latest image stays cached.</div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-circle">A</div>
+            <div class="step-title">Analysis</div>
+            <div class="step-desc">YOLO segmentation with selected thresholds and overlay.</div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-circle">E</div>
+            <div class="step-title">Evidence</div>
+            <div class="step-desc">Review masks, geometry, confidence, and exports.</div>
+          </div>
+        </section>
+
+        {% if eval_metrics %}
+        <section style="margin-bottom:16px">
+          <h2 style="margin:0 0 6px;font-size:16px">Formal Evaluation Results</h2>
+          <p class="eval-header">
+            Model: {{ eval_metrics.weights.split('\\')[-1].split('/')[-1] if eval_metrics.weights else 'best.pt' }}
+            &middot; Split: {{ eval_metrics.split }}
+            &middot; Images: {{ eval_metrics.num_images }}
+            &middot; imgsz: {{ eval_metrics.imgsz }}
+          </p>
+          <div class="metrics">
+            <div class="metric">
+              <div class="metric-label">Mask mAP50</div>
+              <div class="metric-value ok">{{ '%.1f'|format(eval_metrics.map.mask.map50 * 100) }}%</div>
+              <div class="metric-note">Segmentation at IoU 0.50</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Box mAP50</div>
+              <div class="metric-value ok">{{ '%.1f'|format(eval_metrics.map.box.map50 * 100) }}%</div>
+              <div class="metric-note">Detection at IoU 0.50</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Precision</div>
+              <div class="metric-value ok">{{ '%.1f'|format(eval_metrics.map.mask.mp * 100) }}%</div>
+              <div class="metric-note">Mask precision</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Inference</div>
+              <div class="metric-value ok">{{ '%.0f'|format(eval_metrics.counts.latency.inference.median_ms) }}ms</div>
+              <div class="metric-note">median on test split</div>
+            </div>
+          </div>
+        </section>
+        {% endif %}
+
+        {% if error %}
+          <div class="alert">{{ error }}</div>
+        {% else %}
+          <div class="empty">Upload one or more images to start analysis.</div>
+        {% endif %}
+      {% endif %}
+    </main>
+  </div>
+
+  <script>
+    const form = document.getElementById("analysis-form");
+    const imageInput = document.getElementById("image-file");
+    const submitButton = document.getElementById("submit-btn");
+    let autoSubmitTimer = null;
+
+    function hasImage() {
+      return form.dataset.hasImage === "1" || (imageInput.files && imageInput.files.length > 0);
+    }
+
+    function submitAnalysis(delay = 250) {
+      if (!hasImage()) return;
+      window.clearTimeout(autoSubmitTimer);
+      autoSubmitTimer = window.setTimeout(() => { form.requestSubmit(); }, delay);
+    }
+
+    imageInput.addEventListener("change", () => {
+      if (imageInput.files && imageInput.files.length > 0) {
+        form.dataset.hasImage = "1";
+        submitAnalysis(0);
+      }
+    });
+
+    document.querySelectorAll(".auto-submit").forEach((control) => {
+      const eventName = control.tagName === "INPUT" && control.type === "number" ? "input" : "change";
+      control.addEventListener(eventName, () => submitAnalysis(eventName === "input" ? 650 : 100));
+    });
+
+    form.addEventListener("submit", () => {
+      if (!submitButton) return;
+      submitButton.disabled = true;
+      submitButton.textContent = "Analyzing...";
+    });
+
+    const buttons = document.querySelectorAll("[data-tab]");
+    const panels = document.querySelectorAll(".tab-panel");
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        buttons.forEach((b) => b.classList.remove("active"));
+        panels.forEach((p) => p.classList.remove("active"));
+        button.classList.add("active");
+        document.getElementById("tab-" + button.dataset.tab).classList.add("active");
+      });
+    });
+
+  </script>
+</body>
+</html>

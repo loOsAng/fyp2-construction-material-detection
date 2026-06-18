@@ -1,0 +1,29 @@
+# Model weights (large files)
+best.pt
+bestModelSelect/
+
+# Training outputs
+runs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Agent configs
+.agents/
+.claude/
+.reasonix/
+.pytest_cache/
