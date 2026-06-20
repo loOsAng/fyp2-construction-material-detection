@@ -8,9 +8,19 @@ bestModelSelect/*
 !bestModelSelect/yolov8x_retrained/results.png
 !bestModelSelect/yolov8x_balanced/
 !bestModelSelect/yolov8x_balanced/best.pt
+!bestModelSelect/yolov8x_a800_1024/
+!bestModelSelect/yolov8x_a800_1024/results.csv
+!bestModelSelect/yolov8x_a800_1280/
+!bestModelSelect/yolov8x_a800_1280/results.csv
 
 # Training and runtime outputs
 runs/
+!runs/
+!runs/evaluate/
+!runs/evaluate/yolov8x_retrained_1024_test/
+!runs/evaluate/yolov8x_retrained_1024_test/metrics.json
+!runs/evaluate/yolov8x_retrained_1024_test/count_errors.csv
+!runs/evaluate/yolov8x_retrained_1024_test/resolved_data.yaml
 
 # Python
 __pycache__/

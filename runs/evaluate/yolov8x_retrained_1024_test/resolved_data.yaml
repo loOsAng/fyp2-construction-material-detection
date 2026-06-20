@@ -1,0 +1,9 @@
+path: runs/datasets/ccv2_v5_resplit_seed42
+train: runs/datasets/ccv2_v5_resplit_seed42/train/images
+val: runs/datasets/ccv2_v5_resplit_seed42/valid/images
+test: runs/datasets/ccv2_v5_resplit_seed42/test/images
+nc: 3
+names:
+- Brick
+- I-beam
+- nail

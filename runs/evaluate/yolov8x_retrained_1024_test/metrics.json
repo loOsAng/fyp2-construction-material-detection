@@ -1,0 +1,125 @@
+{
+  "weights": "bestModelSelect/yolov8x_retrained/best.pt",
+  "data": "runs/datasets/ccv2_v5_resplit_seed42/data.yaml",
+  "resolved_data": "runs/evaluate/yolov8x_retrained_1024_test/resolved_data.yaml",
+  "split": "test",
+  "imgsz": 1024,
+  "conf": 0.25,
+  "iou": 0.7,
+  "num_images": 66,
+  "classes": {
+    "0": "Brick",
+    "1": "I-beam",
+    "2": "nail"
+  },
+  "map": {
+    "box": {
+      "mp": 0.8406855137888095,
+      "mr": 0.8142660323971157,
+      "map50": 0.8030397828016983,
+      "map75": 0.7029525658748854,
+      "map": 0.6579820486024046,
+      "fitness": 0.6579820486024046,
+      "per_class_map50_95": [
+        0.2814747336878361,
+        0.8759576430392819,
+        0.8165137690800959
+      ]
+    },
+    "mask": {
+      "mp": 0.8588889345819674,
+      "mr": 0.8021157961759995,
+      "map50": 0.8018976650643301,
+      "map75": 0.5033558470169616,
+      "map": 0.47512908446090857,
+      "fitness": 0.47512908446090857,
+      "per_class_map50_95": [
+        0.2834171842508585,
+        0.49151415740010346,
+        0.6504559117317638
+      ]
+    },
+    "results_dict": {
+      "metrics/precision(B)": 0.8406855137888095,
+      "metrics/recall(B)": 0.8142660323971157,
+      "metrics/mAP50(B)": 0.8030397828016983,
+      "metrics/mAP50-95(B)": 0.6579820486024046,
+      "metrics/precision(M)": 0.8588889345819674,
+      "metrics/recall(M)": 0.8021157961759995,
+      "metrics/mAP50(M)": 0.8018976650643301,
+      "metrics/mAP50-95(M)": 0.47512908446090857,
+      "fitness": 1.1331111330633132
+    },
+    "speed": {
+      "preprocess": 1.0364878786883007,
+      "inference": 1391.2048924244257,
+      "loss": 0.001049999837326168,
+      "postprocess": 3.0739424242214723
+    }
+  },
+  "counts": {
+    "by_class": {
+      "0:Brick": {
+        "samples": 66,
+        "gt_total": 1705,
+        "pred_total": 1829,
+        "mae": 7.818181818181818,
+        "rmse": 20.555910452846756,
+        "exact_count_accuracy": 0.696969696969697
+      },
+      "1:I-beam": {
+        "samples": 66,
+        "gt_total": 319,
+        "pred_total": 409,
+        "mae": 1.4545454545454546,
+        "rmse": 3.1574826950748234,
+        "exact_count_accuracy": 0.6515151515151515
+      },
+      "2:nail": {
+        "samples": 66,
+        "gt_total": 163,
+        "pred_total": 166,
+        "mae": 0.19696969696969696,
+        "rmse": 0.6154574548966637,
+        "exact_count_accuracy": 0.8484848484848485
+      }
+    },
+    "overall": {
+      "samples": 198,
+      "gt_total": 2187,
+      "pred_total": 2404,
+      "mae": 3.1565656565656566,
+      "rmse": 12.012409408523329,
+      "exact_count_accuracy": 0.7323232323232324
+    },
+    "per_image_total": {
+      "samples": 66,
+      "gt_total": 2187,
+      "pred_total": 2404,
+      "mae": 9.469696969696969,
+      "rmse": 20.817751748899013,
+      "exact_count_accuracy": 0.24242424242424243
+    },
+    "latency": {
+      "inference": {
+        "count": 66,
+        "mean_ms": 211.2705257565143,
+        "median_ms": 209.49664999352535,
+        "p95_ms": 242.38982499446138
+      },
+      "end_to_end": {
+        "count": 66,
+        "mean_ms": 238.8514106073258,
+        "median_ms": 229.18775000289315,
+        "p95_ms": 278.0144000062137
+      }
+    },
+    "visuals_saved": 0,
+    "visuals_dir": null
+  },
+  "outputs": {
+    "metrics_json": "runs/evaluate/yolov8x_retrained_1024_test/metrics.json",
+    "count_errors_csv": "runs/evaluate/yolov8x_retrained_1024_test/count_errors.csv",
+    "ultralytics_val_dir": "runs/evaluate/yolov8x_retrained_1024_test/ultralytics_val/test"
+  }
+}
