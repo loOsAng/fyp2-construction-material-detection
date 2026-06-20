@@ -858,7 +858,7 @@ def _draw_i_profile(
     thickness: int = 4,
     draw_points: bool = False,
 ) -> None:
-    """Draw a clean 工-shaped I-beam skeleton."""
+    """Draw a clean I-shaped I-beam skeleton."""
     if len(endpoints) != 2:
         return
     cv2.line(viz, endpoints[0], endpoints[1], color, thickness, cv2.LINE_AA)
@@ -1048,7 +1048,7 @@ def extract_clean_geometry_overlay(
     """Draw class-specific clean overlays.
 
     Brick: segmentation mask only.
-    I-beam: semantic 工-shaped skeleton.
+    I-beam: semantic I-shaped skeleton.
     nail: semantic T-shaped skeleton.
     """
     viz = image_rgb.copy()

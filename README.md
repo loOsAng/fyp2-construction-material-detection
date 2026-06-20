@@ -1,174 +1,101 @@
-# Construction Material Detection & Analysis — FYP2
+# Construction Material Detection & Analysis - FYP2
 
-> YOLOv8x instance segmentation + robust I-beam main-axis geometry analysis for construction site material inspection.
+YOLOv8x instance segmentation with mask post-processing and I-beam main-axis geometry analysis for construction site material inspection.
 
----
+## Overview
 
-## English
+This final-year project detects, segments, and counts three construction materials: **Brick**, **I-beam**, and **nail**. It uses YOLOv8x instance segmentation for material detection and combines the predicted masks with class-aware morphology, tiled inference for small objects, and geometry extraction for elongated steel profiles.
 
-### Overview
+The Flask dashboard is designed as a demonstration and inspection console. It displays original images, segmentation masks, I-beam geometry overlays, per-class counts, confidence statistics, CSV export, and formal evaluation metrics.
 
-An undergraduate final-year project (FYP2) that detects, segments, and counts three construction materials — **Brick**, **I-beam**, and **nail** — from site photographs using YOLOv8x instance segmentation. The core novelty is a **robust main-axis geometry extraction algorithm** for I-beam masks: three orientation candidates (skeleton PCA, RANSAC line fitting, rotated bounding box) vote via median angle consensus to produce a clean centreline, overcoming the flange-bias problem inherent to I/H-shaped steel profiles.
-
-A Flask web dashboard serves as a VIVA defence evidence console, rendering segmentation masks, I-beam geometry overlays, per-class counts, confidence statistics, and formal evaluation metrics in real time.
-
-### Features
+## Features
 
 | Layer | Capability |
-|-------|-----------|
-| **Detection** | YOLOv8x-seg instance segmentation at 1024×1024, 3 classes |
-| **Post-processing** | Class-aware morphological refinement (I-beam: 5×5 close kernel, ≥50px min area; others: 3×3, ≥20px) + soft neighbour isolation |
-| **Geometry** | I-beam main-axis via 3-candidate voting (skeleton PCA + RANSAC + rotated rect) → median angle → central endpoints |
-| **Tiled inference** | Sliding-window nail detection preserving full-frame Brick/I-beam results |
-| **Shadow enhancement** | CLAHE on L* channel + gamma correction for dark-area small-object recall |
-| **Dashboard** | Flask web console with multi-image batch upload, real-time metrics, CSV export, formal evaluation panel |
-| **Training** | Single-stage / two-stage / balanced oversampling; supports YOLOv8 and YOLO11 segmentation checkpoints |
-| **Evaluation** | Independent mAP (box + mask), per-class count error, latency (mean / median / P95) |
+|-------|------------|
+| Detection | YOLOv8x-seg instance segmentation at 1024 x 1024, 3 classes |
+| Post-processing | Class-aware morphological refinement and soft neighbour isolation |
+| Geometry | I-beam main-axis estimation using skeleton PCA, RANSAC, and rotated-rectangle candidates |
+| Tiled inference | Sliding-window nail detection while preserving full-frame Brick and I-beam results |
+| Shadow enhancement | CLAHE on the L* channel with gamma correction for darker regions |
+| Dashboard | Flask web console with batch upload, metrics, CSV export, and evaluation panel |
+| Training | Single-stage, two-stage, and balanced oversampling workflows for YOLOv8/YOLO11 segmentation checkpoints |
+| Evaluation | Box/mask mAP, per-class count error, and latency metrics |
 
-### Quick Start
+## Quick Start
 
 ```bash
-# Install
+# Install dependencies
 pip install -r requirements.txt
 
-# Model weights
-# The final checkpoint is provided through Git LFS at:
+# Final checkpoint provided through Git LFS
 # bestModelSelect/yolov8x_retrained/best.pt
 
 # Launch dashboard
 python app.py
-# → http://127.0.0.1:5000
+# Open http://127.0.0.1:5000
 
 # Train
 python train.py --model yolov8x-seg.pt --device 0 --imgsz 1024 --batch 12 --epochs 150
 
 # Evaluate
-python evaluate.py --weights bestModelSelect/yolov8x_retrained/best.pt \
-  --data <dataset>/data.yaml --split test --imgsz 1024 --save-visuals
+python evaluate.py --weights bestModelSelect/yolov8x_retrained/best.pt   --data <dataset>/data.yaml --split test --imgsz 1024 --save-visuals
 ```
 
-### Architecture
+## Project Structure
 
-```
+```text
 newnewnewfyp2/
-├── app.py                  Flask dashboard entry
-├── train.py                Training pipeline
-├── evaluate.py             Formal evaluation (mAP + count + latency)
-├── dataset_audit.py        Read-only dataset statistics
-├── prepare_dataset_resplit.py  Source-group-aware data splitting
-├── requirements.txt
-│
-├── modules/
-│   ├── model.py            YOLO loading, discovery, YOLO11 compatibility patches
-│   ├── inference.py        YOLO predict, tiled inference, shadow preprocessing
-│   ├── skeleton.py         Mask post-processing, I-beam main-axis geometry (~1360 lines)
-│   └── refine.py           SAM mask refinement (optional, not in default pipeline)
-│
-├── templates/
-│   └── index.html          VIVA evidence dashboard UI
-│
-├── tests/                  Unit tests (model selection, brick stack performance)
-├── test/                   6 manual QA images (brick/ibeam/nail ×2)
-├── scripts/                Cloud training guide & notebook
-│
-└── bestModelSelect/        Final Git LFS checkpoint and training summary
+|-- app.py                         Flask dashboard entry point
+|-- train.py                       Training pipeline
+|-- evaluate.py                    Formal evaluation script
+|-- dataset_audit.py               Read-only dataset statistics
+|-- prepare_dataset_resplit.py     Source-group-aware dataset splitting
+|-- requirements.txt               Python dependencies
+|-- modules/
+|   |-- model.py                   YOLO loading and checkpoint discovery
+|   |-- inference.py               Inference, tiled inference, and shadow preprocessing
+|   |-- skeleton.py                Mask post-processing and I-beam geometry extraction
+|   `-- refine.py                  Optional SAM mask refinement module
+|-- templates/
+|   `-- index.html                 Dashboard UI
+|-- tests/                         Unit tests
+|-- test/                          Manual test images
+|-- scripts/                       Cloud training guide and notebook
+`-- bestModelSelect/               Final Git LFS checkpoint and training summary
 ```
 
-### Data Flow
+## Data Flow
 
-```
-site image → decode_image (RGB) → run_inference / run_tiled_inference (YOLO)
-    → apply_mask_postprocessing (morphology + largest component + isolation)
-    → extract_clean_geometry_overlay (I-beam 3-candidate voting → main axis)
-    → dashboard render (masks / geometry overlay / counts / CSV export)
+```text
+site image -> decode_image -> YOLO inference -> mask post-processing
+           -> geometry extraction -> dashboard rendering -> CSV export
 ```
 
----
+## Final Checkpoint
 
-## 中文
+The final checkpoint is tracked with Git LFS:
 
-### 概述
+```text
+bestModelSelect/yolov8x_retrained/best.pt
+```
 
-本科毕业设计项目（FYP2），使用 YOLOv8x 实例分割从施工现场照片中检测、分割并计数三种建筑材料——**砖（Brick）**、**工字梁（I-beam）**、**钉子（nail）**。核心创新是工字梁掩码的**鲁棒主轴线几何提取算法**：三种朝向候选方案（骨架 PCA、RANSAC 鲁棒直线拟合、旋转矩形长边）通过中位数角度投票产生一条干净的中心线，解决了 I/H 型钢掩码翼缘像素拉偏 PCA 的问题。
-
-Flask Web 控制台作为 VIVA 答辩证据面板，实时展示分割掩码、工字梁几何覆盖图、分类计数、置信度统计和正式评估指标。
-
-### 功能特性
-
-| 层级 | 能力 |
-|------|------|
-| **检测** | YOLOv8x-seg 实例分割，1024×1024，3 类 |
-| **后处理** | 按类别差异化形态学精修（I-beam: 5×5 闭运算核, ≥50px 最小面积；其他: 3×3, ≥20px）+ 软隔离去粘连 |
-| **几何分析** | 工字梁主轴线：3 候选投票（骨架PCA + RANSAC + 旋转矩形）→ 中位数角度 → 中心端点 |
-| **分块推理** | 滑窗增强钉子检测，同时保留全图砖/工字梁结果 |
-| **阴影增强** | L* 通道 CLAHE + Gamma 校正，提升暗区小目标召回 |
-| **控制台** | Flask Web 界面，支持多图批量上传、实时指标、CSV 导出、正式评估面板 |
-| **训练** | 单阶段 / 两阶段 / 类别平衡过采样；兼容 YOLOv8 和 YOLO11 分割模型 |
-| **评估** | 独立 mAP（box + mask）、逐类计数误差、延迟（均值/中位数/P95） |
-
-### 快速开始
+After cloning, make sure Git LFS files are available:
 
 ```bash
-# 安装依赖
-pip install -r requirements.txt
-
-# 模型权重
-# 最终 checkpoint 通过 Git LFS 提供：
-# bestModelSelect/yolov8x_retrained/best.pt
-
-# 启动控制台
-python app.py
-# → 浏览器打开 http://127.0.0.1:5000
-
-# 训练
-python train.py --model yolov8x-seg.pt --device 0 --imgsz 1024 --batch 12 --epochs 150
-
-# 评估
-python evaluate.py --weights bestModelSelect/yolov8x_retrained/best.pt \
-  --data <dataset>/data.yaml --split test --imgsz 1024 --save-visuals
+git lfs pull
 ```
 
-### 项目结构
+## Key Evaluation Results
 
-```
-newnewnewfyp2/
-├── app.py                  Flask 控制台入口
-├── train.py                训练流水线
-├── evaluate.py             正式评估（mAP + 计数 + 延迟）
-├── dataset_audit.py        数据集只读审计
-├── prepare_dataset_resplit.py  按源图像组重划分数据集
-├── requirements.txt        依赖清单
-│
-├── modules/
-│   ├── model.py            模型加载/发现/YOLO11 兼容补丁
-│   ├── inference.py        YOLO 推理 + 分块推理 + 阴影预处理
-│   ├── skeleton.py         掩码后处理 + 工字梁主轴线几何（~1360 行）
-│   └── refine.py           SAM 掩码精修（可选，非默认流程）
-│
-├── templates/
-│   └── index.html          VIVA 证据控制台界面
-│
-├── tests/                  单元测试
-├── test/                   6 张手工测试图
-├── scripts/                云端训练指南与 Notebook
-│
-└── bestModelSelect/        最终 Git LFS 模型与训练摘要
-```
-
-### 数据流
-
-```
-工地照片 → decode_image (RGB) → run_inference / run_tiled_inference (YOLO)
-    → apply_mask_postprocessing (形态学 + 最大连通域 + 软隔离)
-    → extract_clean_geometry_overlay (工字梁 3 候选投票 → 主轴线)
-    → 控制台渲染 (分割图 / 几何覆盖图 / 计数 / CSV 导出)
-```
-
-### 关键指标（YOLOv8x retrained, 1024px, CCV2 v5 数据集）
-
-| 指标 | 数值 |
-|------|------|
+| Metric | Value |
+|--------|-------|
 | Mask mAP50 | 80.2% |
 | Mask mAP50-95 | 47.5% |
-| Nail 精确计数率 | 84.8% |
-| 推理延迟（中位数） | 229ms |
+| Nail exact count accuracy | 84.8% |
+| Median end-to-end latency | 229 ms |
+
+## Notes
+
+- The repository includes the final checkpoint through Git LFS.
+- Training outputs under `runs/` are ignored because they are generated artifacts.
+- The dashboard runs locally and does not require external services.
