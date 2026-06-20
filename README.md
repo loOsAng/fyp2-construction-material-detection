@@ -27,7 +27,7 @@ The Flask dashboard is designed as a demonstration and inspection console. It di
 # Install dependencies
 pip install -r requirements.txt
 
-# Final checkpoint provided through Git LFS
+# Main checkpoint provided through Git LFS
 # bestModelSelect/yolov8x_retrained/best.pt
 
 # Launch dashboard
