@@ -61,7 +61,8 @@ newnewnewfyp2/
 |-- tests/                         Unit tests
 |-- test/                          Manual test images
 |-- scripts/                       Cloud training guide and notebook
-`-- bestModelSelect/               Final Git LFS checkpoint and training summary
+|-- runs/evaluate/                 Selected formal evaluation summaries
+`-- bestModelSelect/               Git LFS checkpoints and training summaries
 ```
 
 ## Data Flow
@@ -71,12 +72,13 @@ site image -> decode_image -> YOLO inference -> mask post-processing
            -> geometry extraction -> dashboard rendering -> CSV export
 ```
 
-## Final Checkpoint
+## Model Checkpoints
 
-The final checkpoint is tracked with Git LFS:
+The submitted checkpoints are tracked with Git LFS:
 
 ```text
 bestModelSelect/yolov8x_retrained/best.pt
+bestModelSelect/yolov8x_balanced/best.pt
 ```
 
 After cloning, make sure Git LFS files are available:
@@ -96,6 +98,7 @@ git lfs pull
 
 ## Notes
 
-- The repository includes the final checkpoint through Git LFS.
-- Training outputs under `runs/` are ignored because they are generated artifacts.
+- The repository includes the submitted checkpoints through Git LFS.
+- A800 comparison run summaries are retained as `results.csv` files under `bestModelSelect/`.
+- Most runtime outputs under `runs/` are ignored; the selected evaluation summaries referenced in the report are retained.
 - The dashboard runs locally and does not require external services.
