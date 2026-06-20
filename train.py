@@ -16,9 +16,6 @@ Examples:
     # Use a YOLO11 segmentation checkpoint
     python train.py --model yolo11x-seg.pt --batch 8
 
-    # Use a YOLO26 segmentation checkpoint, if supported by your Ultralytics install
-    python train.py --model yolo26x-seg.pt --batch 4
-
     # Continue from a local segmentation checkpoint
     python train.py --checkpoint runs/train/ccv2_seg/weights/best.pt
 
@@ -413,7 +410,7 @@ def create_balanced_dataset(
 def checkpoint_warning(checkpoint: str) -> None:
     ckpt = Path(checkpoint)
     name = ckpt.name.lower()
-    looks_like_named_yolo = name.startswith(("yolov8", "yolo8", "yolo11", "yolo26"))
+    looks_like_named_yolo = name.startswith(("yolov8", "yolo8", "yolo11"))
     if looks_like_named_yolo and "-seg" not in name:
         print(f"WARNING: {checkpoint} does not look like a segmentation checkpoint. Expected '*-seg.pt'.")
 
@@ -779,7 +776,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--checkpoint",
         dest="model",
         default="yolov8x-seg.pt",
-        help="YOLO segmentation checkpoint, e.g. yolov8x-seg.pt, yolo11x-seg.pt, yolo26x-seg.pt, or local best.pt.",
+        help="YOLO segmentation checkpoint, e.g. yolov8x-seg.pt, yolo11x-seg.pt, or local best.pt.",
     )
     parser.add_argument("--project", default=str(DEFAULT_PROJECT), help="Ultralytics project directory.")
     parser.add_argument("--name", default="ccv2_seg", help="Run name.")

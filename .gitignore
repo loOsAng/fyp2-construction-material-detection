@@ -2,28 +2,21 @@
 best.pt
 bestModelSelect/
 
-# Training outputs
+# Training and runtime outputs
 runs/
 
 # Python
 __pycache__/
 *.pyc
 *.pyo
+.pytest_cache/
 .venv/
 venv/
 
-# IDE
+# IDE and OS
 .idea/
 .vscode/
 *.swp
 *.swo
-
-# OS
 .DS_Store
 Thumbs.db
-
-# Agent configs
-.agents/
-.claude/
-.reasonix/
-.pytest_cache/
