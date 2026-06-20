@@ -14,14 +14,14 @@ bestModelSelect/*
 !bestModelSelect/yolov8x_a800_1280/results.csv
 
 # Training and runtime outputs
-runs/
-!runs/
+runs/*
 !runs/evaluate/
+runs/evaluate/*
 !runs/evaluate/yolov8x_retrained_1024_test/
+runs/evaluate/yolov8x_retrained_1024_test/*
 !runs/evaluate/yolov8x_retrained_1024_test/metrics.json
 !runs/evaluate/yolov8x_retrained_1024_test/count_errors.csv
 !runs/evaluate/yolov8x_retrained_1024_test/resolved_data.yaml
-
 # Python
 __pycache__/
 *.pyc
