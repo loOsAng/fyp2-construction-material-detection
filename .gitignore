@@ -1,4 +1,4 @@
-# Model weights (large files)
+﻿# Model weights (large files)
 best.pt
 bestModelSelect/*
 !bestModelSelect/
@@ -6,6 +6,8 @@ bestModelSelect/*
 !bestModelSelect/yolov8x_retrained/best.pt
 !bestModelSelect/yolov8x_retrained/results.csv
 !bestModelSelect/yolov8x_retrained/results.png
+!bestModelSelect/yolov8x_balanced/
+!bestModelSelect/yolov8x_balanced/best.pt
 
 # Training and runtime outputs
 runs/

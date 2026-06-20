@@ -1,1 +1,2 @@
 bestModelSelect/yolov8x_retrained/best.pt filter=lfs diff=lfs merge=lfs -text
+bestModelSelect/yolov8x_balanced/best.pt filter=lfs diff=lfs merge=lfs -text
